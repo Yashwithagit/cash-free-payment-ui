@@ -2,32 +2,127 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer base{
+   h1{
+    @apply font-bold text-3xl
+   }
+   p {
+    @apply text-base text-neutral-400
+   }
+
+}
+html {
+  font-size: 14px;
+}
+body{
+   margin: 0;
+   padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.main {
+  width: 21rem;
+  height: 19rem;
+  box-sizing: border-box;
+  padding: 3em;
+  position: absolute;
+ 
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.main::before,
+.main::after {
+  content: "";
+  width: 0;
+  height: 0;
+  box-sizing: inherit;
+  margin-top: 30px;
+  margin-bottom: -30px;
+  border: 3px solid transparent;
+  position: absolute;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.main::before {
+  top: 0;
+  left: 0;
+}
+
+.main::after {
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  height: 10%;
+}
+
+.main:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.main:hover::before {
+  border-radius: 2rem;
+  border-top-color: rgb(251 146 60);
+  border-right-color: rgb(251 146 60);
+  transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
+}
+
+
+.product__image {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+
+ 
+}
+.product__image img {
+  border-radius: 2rem;
+  
+}
+
+.container {
+  width: 70%;
+  position: absolute;
+  left: 3rem;
+  height: 10rem;
+  margin-top: 1.2rem;
+  font-size: 1rem;
+
+}
+
+.title {
+  font-family: 'Knewave', cursive;
+    font-size: 2rem;
+    color:rgb(251 146 60);
+    margin-bottom: 50px;
+    position: relative;
+    top:0;
+    left: 0;
+    transition: all 1s;
+    z-index: 9;
+}
+.title > span{
+font-size: 1rem;
+    display:block;
+    color: rgb(251 146 60);
+}
+.desc{
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    color:#404040;
+    left:0;
+    bottom: 2rem;
+    line-height: 1.8;
+    position: relative;
+    transition: all 1s;
+}
+.main:hover .container .title,
+.main:hover .container .desc{
+    left:46%;
+    
+}
+.main:hover .container .desc {
+  white-space: normal;
 }

@@ -13,6 +13,23 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
+    screens: {
+      '2xl': { 'max': '1535px' },
+      // => @media (max-width: 1535px) { ... }
+
+      'xl': { 'max': '1279px' },
+      // => @media (max-width: 1279px) { ... }
+      'xlg': { 'max': '1170px' },
+      // => @media (max-width: 1170px) { ... }
+      'lg': { 'max': '896px' },
+      // => @media (max-width: 1023px) { ... }
+
+      'md': { 'max': '767px' },
+      // => @media (max-width: 767px) { ... }
+
+      'sm': { 'max': '639px' },
+      // => @media (max-width: 639px) { ... }
+    },
   },
   plugins: [],
 };
