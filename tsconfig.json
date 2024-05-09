@@ -25,7 +25,9 @@
     "paths": {
       "@/components/*": ["app/components/*"],
       "@/lib/*": ["app/lib/*"],
-      "@/hooks/*": ["app/hooks/*"]
+      "@/hooks/*": ["app/hooks/*"],
+      "@/provider/*": ["app/provider/*"],
+      "@/redux/*": ["app/redux/*"]
     }
   },
   "include": [
@@ -33,7 +35,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/redux/product/productSlice.js"  ],
+, "app/redux/product/productSlice.js", "app/hooks/useOnlineStatus.jsx", "app/lib/constant.js"  ],
   "exclude": [
     "node_modules"
   ]

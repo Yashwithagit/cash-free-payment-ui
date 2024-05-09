@@ -1,17 +1,26 @@
 // API ENDPOINT
-export const API_END_POINT='https://mysql2-db-server.onrender.com/' //live
-// export const API_END_POINT='http://localhost:8000/' //test
+export const API_END_POINT='https://mysql2-db-server.onrender.com/api/' //live
+// export const API_END_POINT='http://localhost:8000/api/' //test
 
 // API paths
-export const GET_PRODUCTS='api/products'
+export const GET_PRODUCTS='products/'
+export const ADD_CART='products/addCart'
 export const PAYMENT='payment'
 export const VERIFY='verify'
 
-
+// status
+export const SUCCESS='success'
+export const ERROR='error'
 export const currencyList=[
 '₹','USD'
 ]
 
+export const cartOptions=[
+ 'Add to Cart','Added to Cart'
+]
+export const buyOptions=[
+  'Add to Cart','Remove from Cart'
+ ]
 const products = [
     {
       id: 1,

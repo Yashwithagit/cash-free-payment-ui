@@ -1,100 +1,96 @@
 'use client'
 import axios from "axios"
-import React,{useState,useEffect} from 'react'
-import { API_END_POINT,GET_PRODUCTS ,currencyList,PAYMENT, VERIFY} from '@/lib/constant';
+import React,{useState,useEffect,useRef} from 'react'
+import { API_END_POINT,currencyList,PAYMENT, VERIFY,ADD_CART,cartOptions} from '@/lib/constant';
 import {load} from '@cashfreepayments/cashfree-js'
+import {useSelector,useDispatch} from 'react-redux'
+import {fetchProducts} from '@/redux/product/productSlice'
+import useOnlineStatus from '@/hooks/useOnlineStatus'
+import TryAgain from './TryAgain'
+import NoDataFound from './NoDataFound'
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function ProductList() {
-    let cashfree;
-    const initializeSDK=async()=>{
-      cashfree=await load({
-        mode:'sandbox'
-      })
-    }
-    initializeSDK()
-    const [orderId,setOrderId]=useState("")
-    const [productLists, setProductLists] = useState([]);
-    const getProductDetails=async()=>{
-        try {
-            const res=await axios.get(`${API_END_POINT}${GET_PRODUCTS}`)
-            setProductLists(res.data.data)
-            
-          } catch (error) {
-            console.error(error)
-          }
-    }
+  
+   
+ const dispatch=useDispatch()
+ const productData=useSelector((state)=>state.product)
+ const productRef=useRef(false)
+ const isOnline = useOnlineStatus();
+ const router=useRouter()
+
+
     useEffect(()=>{
-   getProductDetails()
+      if(productRef.current===false){
+        getProductDetails()
+      }
+      return ()=>{productRef.current=true}
+  
     },[])
- 
-  const getSessionId=async()=>{
-    try {
-      const res=await axios.get(`${API_END_POINT}${PAYMENT}`)
-      if(res.data && res.data.payment_session_id){
-        setOrderId(res.data.payment_session_id)
-       return res.data.payment_session_id
-      }
+  
+const getProductDetails=()=>{
+  dispatch(fetchProducts())
+}
 
-    }catch(err){
-      console.error(err)
-    }
-  }
-  console.log(orderId)
-  const verifyPayment=async()=>{
-    console.log(orderId,'sad')
-    try {
-      const res=await axios.post(`${API_END_POINT}${VERIFY}`,{
-        orderId:orderId
-      })
-      if(res && res.data){
-        alert('payment verified')
-      }
-      
-    } catch (error) {
-      console.error(error)
-    }
-
-  }
- const handleOnClick=async()=>{
+ const handleOnClick=async(product)=>{
   try {
-    const sessionId=await getSessionId()
-    const checkoutOption={
-      paymentSessionId:sessionId,
-      redirectTarget:'_modal'
+   
+    const requestOption={
+      id:product.product_id,
+      cart:product.cart===1?0:1
     }
-    cashfree.checkout(checkoutOption).then((res)=>{
-      console.log('payment initialized',res)
-      verifyPayment()
-    })
-
+    const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption)
+    if(res.data && res.data.message){
+      getProductDetails()
+      toast.success(res.data.message)
+    }
+    
+   
   }catch(err){
-    console.error(err)
+    toast.error(`${err}`)
   }
  }
   return (
-    <section className="grid grid-cols-3 gap-16 px-36 py-20 max-lg:flex-col max-sm:py-0 max-sm:px-0 mb-10">
-        {
-            productLists.map((product)=>(
-                <div className='relative w-full min-h-80' key={product.id}>
-                <div className="main">
-                 <div className="product__image"><img  src="images/image-product-1-thumbnail.jpg" alt="soda_can" /></div> 
-                  <div className="container">
-                    <div className="title">{product.name}
-                      <span >{`${currencyList[product.currency-1]} ${product.amount}`}</span>
-                    </div>
-                    <p className="desc">{product.product_desc}</p>
-                  
-                  </div>
-                 <div className="absolute bottom-0 left-0 cursor-pointer " onClick={handleOnClick} > <button className=' bg-white hover:bg-orange-100 text-orange-800 font-semibold py-2 px-4 border border-orange-400 rounded shadow'>Add to Cart</button></div>
-                  </div>
-                </div>
-            ))
-        }
+    <>
+    <div><Toaster/></div>
+    {!isOnline  && !productData.data&& <TryAgain handleTryAgainClick={()=>getProductDetails()}/>}
+{
+  productData.isisLoading ?(
+    <div class="loader"></div>
+  ):(
+    <>
+    {
+     productData.data ?(
+        <section className="grid grid-cols-3 gap-16 px-36 py-20 max-lg:flex-col max-sm:py-0 max-sm:px-0 mb-10">{
+         productData.data.map((product)=>(
+          <div className='relative w-full min-h-80' key={product.product_id}>
+          <div className="main">
+           <div className="product__image cursor-pointer" onClick={()=>router.push(`product/${product.product_id}`)}><img  src="images/image-product-1-thumbnail.jpg" alt="soda_can" /></div> 
+            <div className="container">
+              <div className="title">{product.name}
+                <span >{`${currencyList[product.currency-1]} ${product.amount}`}</span>
+              </div>
+              <p className="desc">{product.product_desc}</p>
+            
+            </div>
+           <div className="absolute bottom-0 left-0 cursor-pointer " onClick={()=>handleOnClick(product)} >  <span >{`${currencyList[product.currency-1]} ${product.amount}`}</span> <button className={`${product.cart==1?`bg-orange-500 text-white hover:text-orange-800`:'bg-white text-orange-800'} hover:bg-orange-100  font-semibold py-2 px-4 border border-orange-400 rounded shadow`}>{cartOptions[product.cart]}</button></div>
+            </div>
+          </div>
+      ))}</section>
+    ):<NoDataFound/>
+  }
+     </>  
+  )}
+ 
+
+     
+     
 
   
   
-  {/* <ProductList /> */}
-  </section>
+  
+  </>
   )
 }
 

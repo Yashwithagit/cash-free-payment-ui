@@ -3,7 +3,7 @@ import { useState } from "react";
 const Images = () => {
   const [isLightbox, setLightbox] = useState(false);
   const [selectedImage, setSelectedImage] = useState(
-    "images/image-product-1.jpg"
+    "/images/image-product-1.jpg"
   );
 
   const images = [
