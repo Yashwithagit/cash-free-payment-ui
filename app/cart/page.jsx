@@ -148,7 +148,7 @@ const getProductDetails=()=>{
           <span className=" font-bold">Place Order</span>
         </button>
         </div>
-         ):<p className="text-center font-bold text-2xl">Add to Item to Cart<div> <button onClick={()=>router.push('/')} className={`mt-2 text-orange-400 hover:bg-orange-100  font-semibold py-2 px-4 border border-orange-400 rounded shadow`}>Home</button></div></p>}
+         ):<div className="text-center font-bold text-2xl">Add to Item to Cart<div> <button onClick={()=>router.push('/')} className={`mt-2 text-orange-400 hover:bg-orange-100  font-semibold py-2 px-4 border border-orange-400 rounded shadow`}>Home</button></div></div>}
       </div>
      
     ):<NoDataFound/>
