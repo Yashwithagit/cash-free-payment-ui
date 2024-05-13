@@ -1,6 +1,6 @@
 // API ENDPOINT
-export const API_END_POINT='https://mysql2-db-server.onrender.com/api/' //live
-// export const API_END_POINT='http://localhost:8000/api/' //test
+// export const API_END_POINT='https://mysql2-db-server.onrender.com/api/' //live
+export const API_END_POINT='http://localhost:8000/api/' //test
 
 // API paths
 export const GET_PRODUCTS='products/'
