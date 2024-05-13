@@ -76,7 +76,7 @@ const productSlice = createSlice({
           .addMatcher(
             (action) => action.type.endsWith('/rejected'),
             (state, action) => {
-              state.isLoading = false;
+              state.isLoading = true;
               state.isError = action.isError.message; // Set error message
             }
           );

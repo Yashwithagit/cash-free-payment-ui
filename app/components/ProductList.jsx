@@ -2,7 +2,6 @@
 import axios from "axios"
 import React,{useState,useEffect,useRef} from 'react'
 import { API_END_POINT,currencyList,PAYMENT, VERIFY,ADD_CART,cartOptions} from '@/lib/constant';
-import {load} from '@cashfreepayments/cashfree-js'
 import {useSelector,useDispatch} from 'react-redux'
 import {fetchProducts} from '@/redux/product/productSlice'
 import useOnlineStatus from '@/hooks/useOnlineStatus'
@@ -57,7 +56,10 @@ const getProductDetails=()=>{
     {!isOnline  && !productData.data&& <TryAgain handleTryAgainClick={()=>getProductDetails()}/>}
 {
   productData.isisLoading ?(
-    <div class="loader"></div>
+
+    <main className='flex h-screen justify-center items-center'>
+      <h1>hello</h1>
+       <div class="loader"></div></main>
   ):(
     <>
     {
