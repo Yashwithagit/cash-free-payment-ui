@@ -23,6 +23,7 @@ function Cart() {
    
  const dispatch=useDispatch()
  const productData=useSelector((state)=>state.product)
+ const token = useSelector((state) => state.auth.value)
  const productRef=useRef(false)
  const isOnline = useOnlineStatus();
  const router=useRouter()
@@ -99,7 +100,11 @@ const getProductDetails=()=>{
       id:product.product_id,
       cart:product.cart===1?0:1
     }
-    const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption)
+    const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+    }
+    })
     if(res.data && res.data.message){
       getProductDetails()
       toast.success(res.data.message)

@@ -35,19 +35,7 @@ export const getProductDetailByID = createAsyncThunk("product/getProductById", a
 
 
 });
-// export const addProductToCart = createAsyncThunk("product/addProductCart", async (requestOption,thunkAPI) => {
-//     try {
 
-//         const response = await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption);
-//         const data=  handleData(response.data)
-//        return data
-
-//     } catch (err) {
-//         throw new Error(`Failed to Add to Cart`);
-//     }
-
-
-// });
 const initialState = {
     isLoading: false,
     data: [],
