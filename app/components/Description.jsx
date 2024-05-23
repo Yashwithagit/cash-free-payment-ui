@@ -9,30 +9,32 @@ import axios from "axios";
 const Description = ({id}) => {
   const productData=useSelector((state)=>state.product)
   const data=productData.data.find(item=>item.product_id==id)
+  const token = useSelector((state) => state.auth.value)
   const productRef=useRef(false)
   const dispatch=useDispatch()
-const [count,setCount]=useState(0)
+const [count,setCount]=useState(data?.product_count?data?.product_count:1)
 
 useEffect(()=>{
-  if(productRef.current===false){
+  if(productRef.current===false && token){
     getProductDetails()
   }
   return ()=>{productRef.current=true}
 
 },[])
 const getProductDetails=()=>{
-  dispatch(fetchProducts())
-}
+  token ? dispatch(fetchProducts(token)):dispatch(fetchProducts())
+ }
 
 
   function add() {
+
     setCount((prevCount) => prevCount + 1);
   }
 
   function minus() {
     setCount((prevCount) => {
-      if (prevCount <= 0) {
-        return 0;
+      if (prevCount <= 1) {
+        return 1;
       } else {
         return prevCount - 1;
       }
@@ -41,23 +43,32 @@ const getProductDetails=()=>{
 
   async function addToChart() {
     try {
-   
       const requestOption={
-        id:data?.product_id,
-        cart:data?.cart===1?0:1
+        product_id:data?.product_id,
+        product_count:count,
+        status:data?.cart===1?0:1
       }
-      const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption)
-      if(res.data && res.data.message){
+     
+      const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+      }
+      })
+      if(res.data.error!=='error' ){
         getProductDetails()
         toast.success(res.data.message)
+      }else {
+        toast(res.data.message, {
+          icon: '📣',
+        });
       }
-      
      
     }catch(err){
       toast.error(`${err}`)
     }
    
   }
+  
 
   return (
     <div className="w-1/2 max-lg:w-4/5">
@@ -71,7 +82,7 @@ const getProductDetails=()=>{
       </p>
       <div className="flex flex-col items-start gap-4 mt-4 mb-5 max-sm:flex-row max-sm:justify-between max-sm:mb-7 max-sm:items-center">
         <div className="flex items-center gap-4">
-          <span className="font-bold text-4xl">{`${currencyList[data?.currency-1]} ${count>0?data?.amount * count:data?.amount}`}</span>
+          <span className="font-bold text-4xl">{`${currencyList[data?.currency-1]} ${data?.amount*count}`}</span>
           {/* <span className="text-orange bg-pale-orange py-1 px-2 rounded-sm">
             50%
           </span> */}
@@ -81,13 +92,13 @@ const getProductDetails=()=>{
 
       <div className="flex items-center gap-5 max-lg:flex-col max-lg:items-start max-sm:clear-right">
         <div className="flex items-center justify-between p-3 bg-light-grayish-blue rounded-lg w-36 max-sm:w-full">
-          <img
+        <img
             src="/images/icon-minus.svg"
             alt=""
             className="cursor-pointer"
-            width={18}
             onClick={minus}
           />
+          
           <div className="font-bold text-text-md">{count}</div>
           <img
             src="/images/icon-plus.svg"

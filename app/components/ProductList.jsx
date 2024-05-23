@@ -30,15 +30,15 @@ function ProductList() {
     },[])
   
 const getProductDetails=()=>{
-  dispatch(fetchProducts())
+ token ? dispatch(fetchProducts(token)):dispatch(fetchProducts())
 }
 
  const handleOnClick=async(product)=>{
-  try {
-   
+  try {  
     const requestOption={
-      id:product.product_id,
-      cart:product.cart===1?0:1
+      product_id:product.product_id,
+      product_count:1,
+      status:product.cart===1?0:1
     }
     const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption,{
       headers: {

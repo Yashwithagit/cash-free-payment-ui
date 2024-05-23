@@ -54,12 +54,14 @@ const Images = () => {
   return (
     <div className="grid grid-cols-1 w-1/2 max-lg:w-10/12 max-sm:h-3/4 max-sm:w-screen max-sm:mb-[-140px]">
       {selectedImage && (
+         <div className="w-3/4 h-1/2">
         <img
           src={selectedImage}
           onClick={handleClick}
-          className="rounded-lg w-10/12 max-sm:w-screen max-sm:h-3/4 max-sm:rounded-none"
+          className="rounded-lg  max-sm:rounded-none"
           alt=""
         />
+        </div>
       )}
       <div className="grid grid-cols-4 gap-3 pt-4 w-10/12 max-sm:hidden">
         {images.map((image, imageIndex) => {

@@ -1,6 +1,7 @@
-import { ADD_CART, API_END_POINT, GET_PRODUCTS, SUCCESS } from '@/lib/constant';
+import {  API_END_POINT, GET_AUTH_PRODUCTS, GET_PRODUCTS, SUCCESS } from '@/lib/constant';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+
 
 const handleData=(responseData)=>{
     if (responseData.status == SUCCESS && responseData.data) {
@@ -11,9 +12,19 @@ const handleData=(responseData)=>{
         throw new Error(responseData.message);
     }
 }
-export const fetchProducts = createAsyncThunk("product/getProducts", async () => {
+export const fetchProducts = createAsyncThunk("product/getProducts", async (token) => {
     try {
-        const response = await axios.get(`${API_END_POINT}${GET_PRODUCTS}`);
+      let response;
+      if(token){
+        response = await axios.get(`${API_END_POINT}${GET_AUTH_PRODUCTS}`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+        }
+        });
+      }else{
+        response = await axios.get(`${API_END_POINT}${GET_PRODUCTS}`);
+      }
+   
        const data=  handleData(response.data)
        return data
 

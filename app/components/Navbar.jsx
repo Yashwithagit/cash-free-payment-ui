@@ -23,12 +23,15 @@ function Navbar() {
     const productRef=useRef(false)
     useEffect(()=>{
       if(productRef.current===false){
-        dispatch(fetchProducts())
+        token ? dispatch(fetchProducts(token)):dispatch(fetchProducts())
       }
     
       return ()=>{productRef.current=true}
   
     },[])
+    const getProductDetails=()=>{
+      token ? dispatch(fetchProducts(token)):dispatch(fetchProducts())
+     }
 useEffect(()=>{
   getUserInfo()
 },[openChart])
@@ -56,7 +59,9 @@ useEffect(()=>{
         router.push('/login')
       }else {
         dispatchLogout(resetToken())
+        
         toast.success(`${userData.user_name} has been Logout Successfully`)
+        dispatch(fetchProducts())
        
       }
       setOpenChart(!openChart)

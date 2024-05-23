@@ -39,14 +39,19 @@ const data=productData && productData.data && (productData.data.filter((item) =>
   
    
   const getSessionId=async()=>{
-    const totalAmount = data.reduce((accumulator, product) => accumulator + product.amount, 0);
+    const totalAmount = data.reduce((accumulator, product) => accumulator + accumulator + (product.amount * product.product_count), 0);
+
     try {
         const requestOptions={
             amount:totalAmount,
             currency:'INR',
             id:`${Date.now()}`
         }
-      const res=await axios.post(`${API_END_POINT}${PAYMENT}`,requestOptions)
+      const res=await axios.post(`${API_END_POINT}${PAYMENT}`,requestOptions,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+      }
+      })
   
       if(res.data.data && res.data.data.payment_session_id){
  
@@ -64,6 +69,11 @@ const data=productData && productData.data && (productData.data.filter((item) =>
     try {
       const res=await axios.post(`${API_END_POINT}${VERIFY}`,{
         orderId:orderId
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+      }
       })
       if(res && res.data){
         toast.success('payment verified')
@@ -89,16 +99,16 @@ const data=productData && productData.data && (productData.data.filter((item) =>
     toast.error(err)
   }
  }
-const getProductDetails=()=>{
-  dispatch(fetchProducts())
-}
+ const getProductDetails=()=>{
+  token ? dispatch(fetchProducts(token)):dispatch(fetchProducts())
+ }
 
  const handleOnClick=async(product)=>{
   try {
    
     const requestOption={
-      id:product.product_id,
-      cart:product.cart===1?0:1
+      product_id:product.product_id,
+      status:product.cart===1?0:1
     }
     const res=await axios.post(`${API_END_POINT}${ADD_CART}`,requestOption,{
       headers: {
@@ -135,7 +145,8 @@ const getProductDetails=()=>{
            <div className="product_item w-full cursor-pointer" onClick={()=>router.push(`product/${product.product_id}`)}><img  src="images/image-product-1-thumbnail.jpg" alt="soda_can" /></div> 
             <div className="flex flex-col gap-4">
               <div className="text-3xl font-bold">{product.name}
-                <h2 className="text-2xl">{`${currencyList[product.currency-1]} ${product.amount}`}</h2>
+                <h2 className="text-2xl">{`${currencyList[product.currency-1]} ${product.amount * product.product_count}`}</h2>
+                <h3 className="text-base text-gray-700 my-2">Qty - {product.product_count}</h3>
               </div>
               <p className="w-full">{product.product_desc}</p>
               <div className=" cursor-pointer " onClick={()=>handleOnClick(product)} >  <button className={`${product.cart==1?`bg-orange-500 text-white hover:text-orange-800`:'bg-white text-orange-800'} hover:bg-orange-100  font-semibold py-2 px-4 border border-orange-400 rounded shadow`}>{buyOptions[product.cart]}</button></div>

@@ -1,10 +1,11 @@
 // API ENDPOINT
-// export const API_END_POINT='https://mysql2-db-server.onrender.com/api/' //live
-export const API_END_POINT='http://localhost:8000/api/' //test
+export const API_END_POINT='https://mysql2-db-server.onrender.com/api/' //live
+// export const API_END_POINT='http://localhost:8000/api/' //test
 
 // API paths
 export const GET_PRODUCTS='products/'
-export const ADD_CART='products/addCart'
+export const GET_AUTH_PRODUCTS='order/productList'
+export const ADD_CART='order/updateOrder'
 export const PAYMENT='payment'
 export const VERIFY='verify'
 export const REGISTER='auth/register'
